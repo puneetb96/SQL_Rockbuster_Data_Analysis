@@ -1,0 +1,61 @@
+--Average amount paid by top 5 customers
+/* Outer*/
+SELECT AVG(total_amount_paid) AS avearge_amount_paid
+  FROM
+/*Inner*/
+  (SELECT customer.customer_id,
+  customer.first_name,
+  customer.last_name,
+  country.country,
+  city.city,
+  SUM(payment.amount) AS total_amount_paid
+FROM customer
+  INNER JOIN rental ON customer.customer_id = rental.customer_id
+  INNER JOIN payment ON rental.customer_id = payment.customer_id
+  INNER JOIN address ON customer.address_id = address.address_id
+  INNER JOIN city ON address.city_id = city.city_id
+  INNER JOIN country ON city.country_id = country.country_id
+WHERE country.country IN ('India','China','United States','Japan','Mexico',
+  'Brazil','Russian Federation','Philippines','Turkey','Indonesia')
+  AND
+  city.city IN ('Aurora','Atlixco','Xintai','Adoni','Dhule(Dhulia)',
+  'Kurashiki','Pingxiang','Sivas','Celaya','So Leopoldo')
+GROUP BY city.city, country.country, customer.first_name, customer.last_name, customer.customer_id
+ORDER BY SUM(payment.amount) DESC
+LIMIT 5)
+
+--# of countries each of the top 5 customers are based in
+--Outer Statement
+SELECT country.country,
+COUNT(DISTINCT customer.customer_id) AS all_customer_count,
+--top 5 customers column
+COUNT(DISTINCT top_5_customers.customer_id) AS top_5_customer_count
+FROM customer
+  INNER JOIN address ON customer.address_id = address.address_id
+  INNER JOIN city ON address.city_id = city.city_id
+  INNER JOIN country ON city.country_id = country.country_id
+/*Insert inner query by left join*/
+LEFT JOIN 
+	(SELECT customer.customer_id,
+	customer.first_name,
+	customer.last_name,
+	country.country,
+	city.city,
+	SUM(payment.amount) AS total_amount_paid
+	FROM customer
+	INNER JOIN rental ON customer.customer_id = rental.customer_id
+	INNER JOIN payment ON rental.customer_id = payment.customer_id
+	INNER JOIN address ON customer.address_id = address.address_id
+	INNER JOIN city ON address.city_id = city.city_id
+	INNER JOIN country ON city.country_id = country.country_id
+	WHERE country.country IN ('India','China','United States','Japan','Mexico',
+	'Brazil','Russian Federation','Philippines','Turkey','Indonesia')
+	AND
+	city.city IN ('Aurora','Atlixco','Xintai','Adoni','Dhule(Dhulia)',
+	'Kurashiki','Pingxiang','Sivas','Celaya','So Leopoldo')
+	GROUP BY city.city, country.country, customer.first_name, customer.last_name, customer.customer_id
+	ORDER BY SUM(payment.amount) DESC
+	LIMIT 5) AS top_5_customers ON country.country = top_5_customers.country
+--End of Inner Query
+GROUP BY country.country
+ORDER BY top_5_customer_count DESC
