@@ -18,3 +18,9 @@ launch an online video rental service in order to stay competitive.
 ● Do sales figures vary between geographic regions?
 
 ## Data & Tools Used
+The Rockbuster Stealth dataset includes comprehensive information about Rockbuster's customer profiles, payment transactions, films, staff, actors, rental history, addresses, and inventory. The primary tools used for this project are listed below:
+
+  1. PostgreSQL & DbVisualizer: This was the relational database management system (RDBMS) used to store, map and query Rockbuster's data
+  2. pgAdmin4: Web-based graphical tool to manage PostgreSQL databases
+  3. Tableau: Platform on which project visualizations are created and shared
+
