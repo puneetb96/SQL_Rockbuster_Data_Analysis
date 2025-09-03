@@ -1,0 +1,47 @@
+--Top 10 countries with the most customer counts
+SELECT country, 
+COUNT(customer_id) AS count_of_customer
+FROM customer
+INNER JOIN address ON customer.address_id = address.address_id
+INNER JOIN city ON address.city_id = city.city_id
+INNER JOIN country ON city.country_id = country.country_id
+GROUP BY country
+ORDER BY COUNT(customer_id) DESC
+LIMIT 10
+
+--Top 10 cities within top 10 countries from above
+SELECT city,
+country,
+COUNT(customer_id) AS count_of_customer
+FROM customer
+  INNER JOIN address ON customer.address_id = address.address_id
+  INNER JOIN city ON address.city_id = city.city_id
+  INNER JOIN country ON city.country_id = country.country_id
+WHERE country IN ('India','China','United States','Japan','Mexico',
+'Brazil','Russian Federation','Philippines','Turkey','Indonesia')
+GROUP BY city,
+country
+ORDER BY COUNT(customer_id) DESC
+LIMIT 10
+
+--Top 5 customers from top 10 cities that spent the most at Rockbuster
+SELECT customer.customer_id,
+customer.first_name,
+customer.last_name,
+country.country,
+city.city,
+SUM(payment.amount) AS total_amount_paid
+FROM customer
+  INNER JOIN rental ON customer.customer_id = rental.customer_id
+  INNER JOIN payment ON rental.customer_id = payment.customer_id
+  INNER JOIN address ON customer.address_id = address.address_id
+  INNER JOIN city ON address.city_id = city.city_id
+  INNER JOIN country ON city.country_id = country.country_id
+WHERE country.country IN ('India','China','United States','Japan','Mexico',
+  'Brazil','Russian Federation','Philippines','Turkey','Indonesia')
+    AND
+  city.city IN ('Aurora','Atlixco','Xintai','Adoni','Dhule(Dhulia)',
+  'Kurashiki','Pingxiang','Sivas','Celaya','So Leopoldo')
+GROUP BY city.city, country.country, customer.first_name, customer.last_name, customer.customer_id
+ORDER BY SUM(payment.amount) DESC
+LIMIT 5
