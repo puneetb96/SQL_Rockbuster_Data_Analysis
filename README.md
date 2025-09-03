@@ -1,4 +1,4 @@
-# Rockbuster Data Analysis
+# Rockbuster Stealth Data Analysis
 
 ## Project Introduction
 Rockbuster Stealth LLC is a movie rental company that used to have stores around the
@@ -16,3 +16,5 @@ launch an online video rental service in order to stay competitive.
 ● Where are customers with a high lifetime value based?
 
 ● Do sales figures vary between geographic regions?
+
+## Data & Tools Used
